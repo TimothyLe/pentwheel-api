@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pentwheel Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .whale-logo {
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(45deg, #6a5acd, #9370db);
+            border-radius: 50px 10px 50px 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .whale-logo::before {
+            content: '🐋';
+            font-size: 24px;
+            filter: grayscale(1) brightness(0) invert(1);
+        }
+
+        .company-name {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #6a5acd, #9370db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .date-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .incoming { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+        .outgoing { background: linear-gradient(45deg, #fa709a, #fee140); }
+        .budget { background: linear-gradient(45deg, #a8edea, #fed6e3); }
+
+        .metric-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #6a5acd;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .main-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-in-progress { background: #cce7ff; color: #004085; }
+
+        .bottom-sections {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .serial-number {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-sections, .bottom-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .company-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="whale-logo"></div>
+                <h1 class="company-name">Pentwheel</h1>
+            </div>
+            <div class="date-info">
+                <div>Week of August 5-11, 2025</div>
+                <div>Last updated: Today at 2:30 PM</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Key Metrics -->
+        <section class="key-metrics">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon incoming">📦</div>
+                    <div class="metric-title">Incoming Shipments</div>
+                </div>
+                <div class="metric-value">47</div>
+                <div class="metric-subtitle">This week • 12% increase</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon outgoing">🚚</div>
+                    <div class="metric-title">Outgoing Batches</div>
+                </div>
+                <div class="metric-value">23</div>
+                <div class="metric-subtitle">This week • 2,847 total units</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-header">
+                    <div class="metric-icon budget">💰</div>
+                    <div class="metric-title">Weekly Budget</div>
+                </div>
+                <div class="metric-value">$142K</div>
+                <div class="metric-subtitle">Used: $89K • Remaining: $53K</div>
+            </div>
+        </section>
+
+        <!-- Main Sections -->
+        <section class="main-sections">
+            <div class="section-card">
+                <h2 class="section-title">🔄 Recent Returns</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Return ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RET-2025-001</td>
+                            <td>TechCorp Inc.</td>
+                            <td>Aug 7</td>
+                            <td><span class="status-badge status-in-progress">Processing</span></td>
+                        </tr>
+                        <tr>
+                            <td>RET-2025-002</td>
+                            <td>Global Logistics</td>
+                            <td>Aug 6</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>RET-2025-003</td>
+                            <td>MegaMart</td>
+                            <td>Aug 5</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>RET-2025-004</td>
+                            <td>Northern Supplies</td>
+                            <td>Aug 5</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title">🔧 Service Repairs</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Repair ID</th>
+                            <th>Start Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SRV-001</td>
+                            <td>Aug 7, 9:30 AM</td>
+                            <td><span class="status-badge status-in-progress">In Progress</span></td>
+                        </tr>
+                        <tr>
+                            <td>SRV-002</td>
+                            <td>Aug 6, 2:15 PM</td>
+                            <td><span class="status-badge status-pending">Parts Needed</span></td>
+                        </tr>
+                        <tr>
+                            <td>SRV-003</td>
+                            <td>Aug 5, 11:00 AM</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>SRV-004</td>
+                            <td>Aug 5, 8:45 AM</td>
+                            <td><span class="status-badge status-completed">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bottom Sections -->
+        <section class="bottom-sections">
+            <div class="section-card">
+                <h2 class="section-title">🌏 Incoming Overseas Shipments</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Shipment ID</th>
+                            <th>Origin</th>
+                            <th>Serial Numbers</th>
+                            <th>ETA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OS-2025-089</td>
+                            <td>Shanghai, CN</td>
+                            <td><span class="serial-number">PWH-24-0891</span> to <span class="serial-number">PWH-24-0920</span></td>
+                            <td>Aug 10</td>
+                        </tr>
+                        <tr>
+                            <td>OS-2025-090</td>
+                            <td>Hamburg, DE</td>
+                            <td><span class="serial-number">PWH-24-0921</span> to <span class="serial-number">PWH-24-0955</span></td>
+                            <td>Aug 12</td>
+                        </tr>
+                        <tr>
+                            <td>OS-2025-091</td>
+                            <td>Tokyo, JP</td>
+                            <td><span class="serial-number">PWH-24-0956</span> to <span class="serial-number">PWH-24-0975</span></td>
+                            <td>Aug 15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-card">
+                <h2 class="section-title">📋 Service Bill of Materials</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>In Stock</th>
+                            <th>Needed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Motor Assembly</td>
+                            <td>45</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Control Board</td>
+                            <td>23</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>Power Cable</td>
+                            <td>156</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Unit</td>
+                            <td>8</td>
+                            <td><span style="color: #dc3545; font-weight: bold;">18</span></td>
+                        </tr>
+                        <tr>
+                            <td>Housing Bracket</td>
+                            <td>67</td>
+                            <td>22</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

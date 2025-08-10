@@ -21,3 +21,16 @@ A data visualizing platform with a built in rotation scheduler with a modern fra
 
 ## Landing Page  
 ![Pentwheel Landing Page](./assets/landing.png "Pentwheel Landing")  
+
+## Prerequisites  
+* `npm 11.5.2`  
+* `python3`  
+* `node 20.9.0`  
+
+## How to run  
+1. Edit the `.env.example`  
+2. Fill out the `TODO` sections  
+3. Run `npm install`  
+4. `cp .env.example .env.local`  
+5. `npm run dev`  
+6. Open in browser `http://localhost:3000`   

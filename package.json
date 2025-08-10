@@ -1,19 +1,32 @@
 {
-  "name": "pentwheel-api",
+  "name": "pentwheel-dashboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sales and warehouse dashboard for Pentwheel",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/express": "^5.0.3",
-    "@types/node": "^24.0.3",
-    "express": "^5.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  }
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.52.0",
+    "eslint-config-next": "^14.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.0"
+  },
+  "keywords": ["dashboard", "warehouse", "sales", "typescript", "react"],
+  "author": "Your Name",
+  "license": "MIT"
 }

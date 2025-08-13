@@ -32,7 +32,7 @@ A modern sales and warehouse management dashboard built with Next.js, TypeScript
 
 1. **Clone and setup:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/TimothyLe/pentwheel-api.git
    cd pentwheel-dashboard
    chmod +x scripts/setup.sh
    ./scripts/setup.sh
